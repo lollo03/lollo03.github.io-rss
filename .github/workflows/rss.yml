@@ -3,7 +3,7 @@ name: Update RSS
 on:
   push:
     branches: 
-      - master
+      - main
   repository_dispatch:
   schedule:
     - cron: '0 0 * * *'

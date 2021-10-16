@@ -16,10 +16,18 @@ for i in resp["tree"]:
     if i["path"] == ".gitignore" or i["path"] == "portfolio.md":
         continue
     titolo = i["path"].split(".")[0].split("-")[1].lstrip(" ")
+
+    desc = requests.get("https://raw.githubusercontent.com/lollo03/" +
+                        repo + "/" + branch + "/" + i["path"])
+    desc = desc.text
+    desc = desc.split("<!--")[1]
+    desc = desc.split("-->")[0]
+    desc = desc.replace("\n", "")
+
     items.insert(0, Item(
         title=titolo,
         link="https://lollo03.github.io",
-        description="Leggi l'articolo completo sul mio sito!"
+        description=desc
     ))
 
 

@@ -16,7 +16,7 @@ for i in resp["tree"]:
     if i["path"] == ".gitignore" or i["path"] == "portfolio.md":
         continue
     titolo = i["path"].split(".")[0].split("-")[1].lstrip(" ")
-    items.append(Item(
+    items.insert(0, Item(
         title=titolo,
         link="https://lollo03.github.io",
         description="Leggi l'articolo completo sul mio sito!"

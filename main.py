@@ -1,7 +1,8 @@
-import datetime
+from datetime import datetime
 from rfeed import *
 import requests
 import json
+import urllib.parse
 
 branch = "articles"
 repo = "lollo03.github.io"
@@ -13,21 +14,29 @@ resp = json.loads(r.text)
 items = []
 
 for i in resp["tree"]:
-    if i["path"] == ".gitignore" or i["path"] == "portfolio.md":
+    if i["path"].startswith(".") or i["path"] == "portfolio.md":
         continue
-    titolo = i["path"].split(".")[0].split("-")[1].lstrip(" ")
 
-    desc = requests.get("https://raw.githubusercontent.com/lollo03/" +
-                        repo + "/" + branch + "/" + i["path"])
-    desc = desc.text
-    desc = desc.split("<!--")[1]
-    desc = desc.split("-->")[0]
-    desc = desc.replace("\n", "")
+    ogg = requests.get("https://raw.githubusercontent.com/lollo03/" +
+                       repo + "/" + branch + "/" + i["path"])
+    ogg = ogg.text
+    ogg = ogg.split("<!--")[1]
+    ogg = ogg.split("-->")[0]
+    ogg = ogg.replace("\n", "")
+
+    ogg = json.loads(ogg)
+
+    link = "https://github.com/lollo03/lollo03.github.io/blob/articles/" + \
+        urllib.parse.quote(i["path"])
+
+    data = datetime.strptime(ogg["data"].replace(" ", ""), '%d/%m/%Y')
 
     items.insert(0, Item(
-        title=titolo,
-        link="https://lollo03.github.io",
-        description=desc
+        title=ogg["titolo"],
+        link=link,
+        description=ogg["desc"],
+        guid=Guid(ogg["titolo"]),
+        pubDate=data
     ))
 
 
@@ -36,7 +45,7 @@ feed = Feed(
     link="https://lollo03.github.io",
     description="Feed del mio blog personale",
     language="it-IT",
-    lastBuildDate=datetime.datetime.now(),
+    lastBuildDate=datetime.now(),
     items=items
 )
 f = open("rss.xml", "w")

@@ -14,7 +14,7 @@ resp = json.loads(r.text)
 items = []
 
 for i in resp["tree"]:
-    if i["path"].startswith(".") or i["path"] == "portfolio.md":
+    if i["path"].startswith(".") or i["path"] == "portfolio.md" or i["path"] == "aboutme.md":
         continue
 
     ogg = requests.get("https://raw.githubusercontent.com/lollo03/" +

@@ -6,6 +6,8 @@ import urllib.parse
 
 branch = "articles"
 repo = "lollo03.github.io"
+ignoredFiles = ['portfolio.md', 'aboutme.md']
+
 
 r = requests.get("https://api.github.com/repos/lollo03/" +
                  repo + "/git/trees/" + branch + "?recursive=1")
@@ -13,8 +15,11 @@ resp = json.loads(r.text)
 
 items = []
 
+
+
 for i in resp["tree"]:
-    if i["path"].startswith(".") or i["path"] == "portfolio.md" or i["path"] == "aboutme.md":
+    #skips some files
+    if i["path"].startswith(".") or i["path"] in ignoredFiles:
         continue
 
     ogg = requests.get("https://raw.githubusercontent.com/lollo03/" +
